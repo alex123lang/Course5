@@ -1,9 +1,10 @@
 import psycopg2
 from src.hh import HeadHunterAPI
+from src.config import config
 
 
-def create_database(db_name, user, password, host):
-    conn = psycopg2.connect(dbname=db_name, user=user, password=password, host=host)
+def create_database(db_name):
+    conn = psycopg2.connect(dbname="postgres", **config())
     conn.autocommit = True
     cur = conn.cursor()
     cur.execute(f'DROP DATABASE IF EXISTS {db_name}')
@@ -13,8 +14,8 @@ def create_database(db_name, user, password, host):
     conn.close()
 
 
-def create_tables(db_name, user, password, host):
-    conn = psycopg2.connect(dbname=db_name, user=user, password=password, host=host)
+def create_tables(db_name):
+    conn = psycopg2.connect(dbname=db_name, **config())
     with conn:
         with conn.cursor() as cur:
             cur.execute('''CREATE TABLE employers 
@@ -35,11 +36,11 @@ def create_tables(db_name, user, password, host):
     conn.close()
 
 
-def insert_data_into_tables(db_name, user, password, host, data):
+def insert_data_into_tables(db_name, data):
     hh = HeadHunterAPI(data)
     employers = hh.get_employers()
     vacancies = hh.get_vacancies()
-    conn = psycopg2.connect(dbname=db_name, user=user, password=password, host=host)
+    conn = psycopg2.connect(dbname=db_name, **config())
     with conn:
         with conn.cursor() as cur:
             for employer in employers:
@@ -53,9 +54,3 @@ def insert_data_into_tables(db_name, user, password, host, data):
                                           vacancy["url"], vacancy["employer"]))
     conn.close()
 
-
-data = ['course', 'postgres', 'young8ofalltime', 'localhost']
-list_employers = ['Ozon', 'Альфа-Банк', 'Яндекс', 'МТС', 'Ростелеком', 'Зенит', 'Аэрофлот', 'VK', 'X5 Group', 'Тинькофф']
-create_database(data[0], data[1], data[2], data[3])
-create_tables(data[0], data[1], data[2], data[3])
-insert_data_into_tables(data[0], data[1], data[2], data[3], list_employers)

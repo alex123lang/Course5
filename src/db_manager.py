@@ -1,16 +1,13 @@
 import psycopg2
+from src.config import config
 
 
 class DBManager:
-    def __init__(self, db_name, user, password, host):
+    def __init__(self, db_name):
         self.db_name = db_name
-        self.user = user
-        self.password = password
-        self.host = host
 
-    @staticmethod
-    def execute_query(query) -> list:
-        conn = psycopg2.connect(dbname='db_name', user='user', password='password', host='host')
+    def execute_query(self, query) -> list:
+        conn = psycopg2.connect(dbname=self.db_name, **config())
         with conn:
             with conn.cursor() as cur:
                 cur.execute(query)

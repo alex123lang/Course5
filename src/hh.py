@@ -9,7 +9,7 @@ class HeadHunterAPI:
 
     def get_employers(self):
         employers = []
-        for company in companies:
+        for company in self.companies:
             params = {
                 'text': company,
             }
@@ -25,7 +25,7 @@ class HeadHunterAPI:
 
     def get_vacancies_by_employer(self, employer_id):
         url_vacancies = self.url_vacancies.format(employer_id)
-        response = requests.get(url_vacancies)
+        response = requests.get(url_vacancies, params={'per_page': 100})
         if response.status_code == 200:
             return response.json()["items"]
         else:
@@ -46,7 +46,4 @@ class HeadHunterAPI:
         return vacancies
 
 
-companies = ['Ozon', 'Альфа-Банк', 'Яндекс', 'МТС', 'Ростелеком', 'Зенит', 'Аэрофлот', 'VK', 'X5 Group', 'Тинькофф']
-hh = HeadHunterAPI(companies)
-print(hh.get_employers())
-print(hh.get_vacancies())
+
