@@ -1,10 +1,8 @@
 from configparser import ConfigParser
 
 
-def config(filename="C:/Users/russe/PycharmProjects/SQL/database.ini", section="postgresql"):
-    # create a parser
+def config(filename="database.ini", section="postgresql"):
     parser = ConfigParser()
-    # read config file
     parser.read(filename, encoding="utf-8")
     db = {}
     if parser.has_section(section):
