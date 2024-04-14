@@ -22,13 +22,24 @@ def main():
         )
 
         if new == '1':
-            print(dbm.get_companies_and_vacancies_count())
+            for i in dbm.get_companies_and_vacancies_count():
+                print(f"{i[0]}: {i[1]}")
         elif new == '2':
-            print(dbm.get_all_vacancies())
+            for i in dbm.get_all_vacancies():
+                print(f"Компания: {i[0]}\n"
+                      f"Вакансия: {i[1]}\n"
+                      f"Зарплата: {i[2]} - {i[3]}\n"
+                      f"Ссылка: {i[4]}\n")
         elif new == '3':
-            print(dbm.get_avg_salary())
+            print(f"Средняя зарплата по вакансиям: {int(dbm.get_avg_salary()[0][0])}\n")
         elif new == '4':
-            print(dbm.get_vacancies_with_higher_salary())
+            print('Список вакансий, у которых зарплата выше средней по всем вакансиям:')
+            for i in dbm.get_vacancies_with_higher_salary():
+                print(f"ID вакансии: {i[0]}\n"
+                      f"Вакансия: {i[1]}\n"
+                      f"Зарплата: {i[2]} - {i[3]}\n"
+                      f"Ссылка: {i[4]}\n"
+                      f"Компания: {i[5]}\n")
         elif new == '5':
             keyword = str(input('Найти: '))
             print(dbm.get_vacancies_with_keyword(keyword))
