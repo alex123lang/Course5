@@ -4,17 +4,18 @@ from src.config import config
 
 
 def create_database(db_name):
+    """Создает новую базу данных."""
     conn = psycopg2.connect(dbname="postgres", **config())
     conn.autocommit = True
     cur = conn.cursor()
     cur.execute(f'DROP DATABASE IF EXISTS {db_name}')
     cur.execute(f'CREATE DATABASE {db_name}')
-
     cur.close()
     conn.close()
 
 
 def create_tables(db_name):
+    """Создает таблицы в базе данных."""
     conn = psycopg2.connect(dbname=db_name, **config())
     with conn:
         with conn.cursor() as cur:
@@ -37,6 +38,7 @@ def create_tables(db_name):
 
 
 def insert_data_into_tables(db_name, data):
+    """Вставляет данные в таблицы базы данных."""
     hh = HeadHunterAPI(data)
     employers = hh.get_employers()
     vacancies = hh.get_vacancies()
@@ -44,13 +46,8 @@ def insert_data_into_tables(db_name, data):
     with conn:
         with conn.cursor() as cur:
             for employer in employers:
-                cur.execute("""
-                                INSERT INTO employers VALUES (%s, %s, %s)
-                            """, (employer["id"], employer["name"], employer["open_vacancies"]))
+                cur.execute("""INSERT INTO employers VALUES (%s, %s, %s)""", (employer["id"], employer["name"], employer["open_vacancies"]))
             for vacancy in vacancies:
-                cur.execute("""INSERT INTO vacancies VALUES (%s, %s, %s, %s, %s, %s)
-                                    """, (vacancy["id"], vacancy["name"],
-                                          vacancy["salary_from"], vacancy["salary_to"],
-                                          vacancy["url"], vacancy["employer"]))
+                cur.execute("""INSERT INTO vacancies VALUES (%s, %s, %s, %s, %s, %s)""", (vacancy["id"], vacancy["name"], vacancy["salary_from"], vacancy["salary_to"], vacancy["url"], vacancy["employer"]))
     conn.close()
 
